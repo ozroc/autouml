@@ -53,6 +53,5 @@ class Point():
     return '(%s, %s)' % (self.x, self.y)
 
 c=Circle(1)
-for i in range(3):
-  c.rshot(3)
-  print c.pi
+c.rshot(3)
+print c.pi
