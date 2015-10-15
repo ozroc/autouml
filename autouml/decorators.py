@@ -9,7 +9,7 @@ def class_dec(orig_class):
             setattr(orig_class, name, method_dec(m))
         elif name == '__init__':
             setattr(orig_class, name, constructor_dec(m))
-    return orig_class
+     return orig_class
 
 
 def function_dec(orig_func):
