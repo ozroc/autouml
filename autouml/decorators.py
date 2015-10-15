@@ -21,7 +21,7 @@ def function_dec(orig_func):
         end_method = ''
         the_class2 = '__main__'
         the_method2 = orig_func.__name__
-        log.logging.info("%s->%s%s: %s%s" % (the_class, 'o' if the_method2 == '__init__' else '', the_class2, the_method2, formatter.args(args[1:],kwargs)))
+        log.logging.info(formatter.generic_arrow(the_class, the_class2, the_method2, args[1:], kwargs))
         return orig_func(*args, **kwargs)
     return wrapper
 
@@ -42,7 +42,7 @@ end'''
         the_class2 = ' '+str(args[0].__class__).replace('__main__.','')
         the_method2 = orig_func.__name__
     
-        log.logging.info("%s->o%s: %s%s" % (the_class, the_class2, the_method2, formatter.args(args[1:],kwargs)))
+        log.logging.info(formatter.constructor_arrow(the_class, the_class2, the_method2, args[1:],kwargs))
         return orig_func(*args, **kwargs)
     return wrapper
 
@@ -62,7 +62,7 @@ end'''
         the_class2 = ' '+str(args[0].__class__).replace('__main__.','')
         the_method2 = orig_func.__name__
     
-        log.logging.info("%s->%s: %s%s" % (the_class, the_class2, the_method2, formatter.args(args[1:],kwargs)))
+        log.logging.info(formatter.method_arrow(the_class, the_class2, the_method2, args[1:],kwargs))
         return orig_func(*args, **kwargs)
     return wrapper
 
