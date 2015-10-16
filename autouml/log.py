@@ -1,3 +1,3 @@
 import logging
 
-logging.basicConfig(filename='cucotracer.log', level=logging.INFO, format='%(message)s')
+logging.basicConfig(filename='autouml.log', level=logging.INFO, format='%(message)s')

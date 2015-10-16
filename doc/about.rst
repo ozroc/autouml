@@ -25,11 +25,11 @@ Just decorate your methods, functions or classes:
 
 And run your code. A .log file will be generated
 
-.. literalinclude:: cucotracer.log
+.. literalinclude:: autouml.log
 
 And you will be able to plot it!
 
-   python -m plantuml uml_sequence.log
+   python -m plantuml autouml.log
 
 
-.. image:: cucotracer.png
+.. image:: autouml.png
