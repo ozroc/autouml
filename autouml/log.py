@@ -7,22 +7,21 @@ import logging.handlers
 import atexit
 import plantuml
 
-pUML = plantuml.PlantUML()
 
 logger = logging.getLogger('autouml')
 
-__handler1 = logging.handlers.RotatingFileHandler('autouml.log', backupCount=1)
-__handler2 = logging.FileHandler('autouml.log')
+handler1 = logging.handlers.RotatingFileHandler('autouml.log', backupCount=0)
+handler2 = logging.FileHandler('autouml.log')
 
-__log_format = logging.Formatter('%(message)s')
+log_format = logging.Formatter('%(message)s')
 
-__handler1.setFormatter(__log_format)
-__handler2.setFormatter(__log_format)
+handler1.setFormatter(log_format)
+handler2.setFormatter(log_format)
 
 
-__handler1.doRollover()
-logger.addHandler(__handler1)
-# logger.addHandler(__handler2)
+handler1.doRollover()
+logger.addHandler(handler1)
+# logger.addHandler(handler2)
 
 logger.setLevel(logging.INFO)
 
@@ -33,9 +32,17 @@ skinparam handwritten true''')
 
 
 def closeuml():
-
+    '''
+    Closes plantuml diagram syntax and tries to generate the image.
+    Intended to be called on program exit
+    '''
     logger.info("@enduml")
-    logger.debug("/' generating image at autouml.png'/")
-    pUML.processes_file('autouml.log', outfile='autouml.png')
+    try:
+        logger.info("/' generating image at autouml.png'/")
+        plantuml.PlantUML().processes_file('autouml.log', outfile='autouml.png')
+    except Exception, captured_except:
+        logger.error('Unable to generate image file')
+        logger.error(captured_except)
+
 
 atexit.register(closeuml)

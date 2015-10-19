@@ -23,13 +23,10 @@ Just decorate your methods, functions or classes:
 
 
 
-And run your code. A .log file will be generated
+And run your code. A .log file will be generated with the plantuml syntax.
 
 .. literalinclude:: autouml.log
 
-And you will be able to plot it!
-
-   python -m plantuml autouml.log
-
+And also an image with the drawn diagram.
 
 .. image:: autouml.png
