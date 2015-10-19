@@ -30,14 +30,15 @@ def generic_arrow(class1, class2, method, args, kwargs, arrow=''):
 
     '''
     if class1 != '[':
-        class1+=' '
+        class1 += ' '
     return "%(class1)s->%(arrow)s %(class2)s: %(method)s%(args)s" % {
-        'class1': class1, 
-        'class2': class2, 
-        'method': method, 
-        'args': format_args(args,kwargs),
+        'class1': class1,
+        'class2': class2,
+        'method': method,
+        'args': format_args(args, kwargs),
         'arrow': arrow
-        }
+    }
+
 
 def method_arrow(*args):
     '''
@@ -50,6 +51,7 @@ def method_arrow(*args):
     '''
     return generic_arrow(*args, arrow='')
 
+
 def constructor_arrow(*args):
     '''
     Returns a sequence string arrow for methods
@@ -60,4 +62,3 @@ def constructor_arrow(*args):
 
     '''
     return generic_arrow(*args, arrow='o')
-

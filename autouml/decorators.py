@@ -1,15 +1,18 @@
 import types
 import log
+import logging
 import inspect
 import formatter
 
+logger = logging.getLogger('autouml')
+
 def class_dec(orig_class):
-     for name, m in inspect.getmembers(orig_class, inspect.ismethod):
+    for name, m in inspect.getmembers(orig_class, inspect.ismethod):
         if not name.startswith('__'):
             setattr(orig_class, name, method_dec(m))
         elif name == '__init__':
             setattr(orig_class, name, constructor_dec(m))
-     return orig_class
+    return orig_class
 
 
 def function_dec(orig_func):
@@ -21,17 +24,20 @@ def function_dec(orig_func):
         end_method = ''
         the_class2 = '__main__'
         the_method2 = orig_func.__name__
-        log.logging.info(formatter.generic_arrow(the_class, the_class2, the_method2, args[1:], kwargs))
+        logger.info(formatter.generic_arrow(
+            the_class, the_class2, the_method2, args[1:], kwargs))
         return orig_func(*args, **kwargs)
     return wrapper
 
 
 def constructor_dec(*orig_func):
-    orig_func=orig_func[0]
+    orig_func = orig_func[0]
+
     def wrapper(*args, **kwargs):
         stack = inspect.stack()
         try:
-            the_class = str(stack[1][0].f_locals['self'].__class__).replace('__main__.','')+' '
+            the_class = str(stack[1][0].f_locals['self'].__class__).replace(
+                '__main__.', '') + ' '
         except:
             the_class = '['
         the_method = stack[1][0].f_code.co_name
@@ -39,19 +45,23 @@ def constructor_dec(*orig_func):
     ''' % (the_method)
         end_method = '''
 end'''
-        the_class2 = ' '+str(args[0].__class__).replace('__main__.','')
+        the_class2 = ' ' + str(args[0].__class__).replace('__main__.', '')
         the_method2 = orig_func.__name__
-    
-        log.logging.info(formatter.constructor_arrow(the_class, the_class2, the_method2, args[1:],kwargs))
+
+        logger.info(formatter.constructor_arrow(
+            the_class, the_class2, the_method2, args[1:], kwargs))
         return orig_func(*args, **kwargs)
     return wrapper
 
+
 def method_dec(*orig_func):
-    orig_func=orig_func[0]
+    orig_func = orig_func[0]
+
     def wrapper(*args, **kwargs):
         stack = inspect.stack()
         try:
-            the_class = str(stack[1][0].f_locals['self'].__class__).replace('__main__.','')+' '
+            the_class = str(stack[1][0].f_locals['self'].__class__).replace(
+                '__main__.', '') + ' '
         except:
             the_class = '['
         the_method = stack[1][0].f_code.co_name
@@ -59,10 +69,11 @@ def method_dec(*orig_func):
     ''' % (the_method)
         end_method = '''
 end'''
-        the_class2 = ' '+str(args[0].__class__).replace('__main__.','')
+        the_class2 = ' ' + str(args[0].__class__).replace('__main__.', '')
         the_method2 = orig_func.__name__
-    
-        log.logging.info(formatter.method_arrow(the_class, the_class2, the_method2, args[1:],kwargs))
+
+        logger.info(formatter.method_arrow(
+            the_class, the_class2, the_method2, args[1:], kwargs))
         return orig_func(*args, **kwargs)
     return wrapper
 
@@ -71,7 +82,7 @@ __typewrappers = {
     types.FunctionType: method_dec,
     types.MethodType: method_dec,
     'generic': class_dec
-    }
+}
 
 
 def autodecorate(*args, **kwargs):
@@ -80,11 +91,8 @@ def autodecorate(*args, **kwargs):
     It will analyse the type of the object to decorate 
     and will apply the appropiate decorator.
     '''
-    content_type=type(args[0])
+    content_type = type(args[0])
     if content_type in __typewrappers.keys():
         return __typewrappers[content_type](*args, **kwargs)
     else:
         return __typewrappers['generic'](*args, **kwargs)
-
-
-
