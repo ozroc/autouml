@@ -9,7 +9,7 @@ import atexit
 
 logger = logging.getLogger('autouml')
 
-handler1 = logging.handlers.RotatingFileHandler('autouml.log', backupCount=0)
+handler1 = logging.handlers.RotatingFileHandler('autouml.log', backupCount=1)
 handler2 = logging.FileHandler('autouml.log')
 
 log_format = logging.Formatter('%(message)s')
