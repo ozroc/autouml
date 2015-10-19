@@ -5,7 +5,6 @@ plantuml files are generated through a logger
 import logging
 import logging.handlers
 import atexit
-import plantuml
 
 
 logger = logging.getLogger('autouml')
@@ -38,6 +37,7 @@ def closeuml():
     '''
     logger.info("@enduml")
     try:
+        import plantuml
         logger.info("/' generating image at autouml.png'/")
         plantuml.PlantUML().processes_file('autouml.log', outfile='autouml.png')
     except Exception, captured_except:
