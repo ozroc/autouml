@@ -4,6 +4,12 @@ def format_args(args, kwargs):
     """
     Makes a nice string representation of all the arguments
     Taken from `format_args <https://gist.github.com/beng/7817597>`_
+
+    >>> args = (1, 2)
+    >>> kwargs = {'one': 1, 'two': 2}
+    >>> format_args(args, kwargs)
+    '(1, 2, two=2, one=1)'
+
     """
 
     allargs = []
@@ -24,8 +30,7 @@ def generic_arrow(class1, class2, method, args, kwargs, arrow=''):
     '''
     Returns a sequence string
 
-    >>> import autouml
-    >>> autouml.formatter.generic_arrow('A', 'B', 'f', 'x', {} )
+    >>> generic_arrow('A', 'B', 'f', 'x', {} )
     'A -> B: f(x)'
 
     '''
@@ -44,8 +49,7 @@ def method_arrow(*args):
     '''
     Returns a sequence string arrow for methods
 
-    >>> import autouml
-    >>> autouml.formatter.method_arrow('A', 'B', 'f', 'x', {} )
+    >>> method_arrow('A', 'B', 'f', 'x', {} )
     'A -> B: f(x)'
 
     '''
@@ -54,10 +58,9 @@ def method_arrow(*args):
 
 def constructor_arrow(*args):
     '''
-    Returns a sequence string arrow for methods
+    Returns a sequence string arrow for constructor methods
 
-    >>> import autouml
-    >>> autouml.formatter.constructor_arrow('A', 'B', '__init__', 'x', {} )
+    >>> constructor_arrow('A', 'B', '__init__', 'x', {} )
     'A ->o B: __init__(x)'
 
     '''

@@ -23,10 +23,10 @@ Just decorate your methods, functions or classes:
 
 
 
-And run your code. A .log file will be generated with the plantuml syntax.
+And run your code. A log file will be generated with the plantuml syntax.
 
-.. literalinclude:: autouml.log
+.. literalinclude:: example.autouml.log
 
-And also an image with the drawn diagram.
+And also an image with the drawn diagram once the execution ends.
 
-.. image:: autouml.png
+.. image:: example.autouml.png
