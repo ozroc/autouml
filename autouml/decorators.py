@@ -49,6 +49,7 @@ def get_decorator(
                     the_method,
                     args[1:],
                     kwargs,
+                    show_arguments=show_arguments,
                     use_instance_ids=use_instance_ids
                 )
             )
@@ -77,7 +78,9 @@ def get_decorator(
                     class_to,
                     the_method,
                     args[1:],
-                    kwargs
+                    kwargs,
+                    show_arguments=show_arguments,
+                    use_instance_ids=use_instance_ids
                 )
             )
             return orig_func(*args, **kwargs)
@@ -105,7 +108,9 @@ def get_decorator(
                     class_to,
                     the_method,
                     args[1:],
-                    kwargs
+                    kwargs,
+                    show_arguments=show_arguments,
+                    use_instance_ids=use_instance_ids
                 )
             )
             return orig_func(*args, **kwargs)

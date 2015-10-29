@@ -1,3 +1,24 @@
+__BOXES__ = {}
+
+
+def draw_box(class_name):
+    return '''
+box "%s" 
+  participant %s
+end box
+''' % (class_name, '\n  participant '.join(__BOXES__[class_name]))
+
+
+def class_box(class_id_name):
+    if '@' in class_id_name:
+        class_name, id_name = class_id_name.split('@')
+        if class_name not in __BOXES__.keys():
+            __BOXES__[class_name] = [id_name]
+            return draw_box(class_name)
+        elif id_name not in __BOXES__[class_name]:
+            __BOXES__[class_name].append(id_name)
+            return draw_box(class_name)
+    return ''
 
 
 def format_args(args, kwargs):
@@ -46,7 +67,7 @@ def method_name(the_method):
     return the_method.__name__
 
 
-def generic_arrow(class1, class2, the_method, args, kwargs, arrow='', use_instance_ids=False):
+def generic_arrow(class1, class2, the_method, args, kwargs, arrow='', use_instance_ids=False, show_arguments=True):
     '''
     Returns a sequence string
 
@@ -54,12 +75,16 @@ def generic_arrow(class1, class2, the_method, args, kwargs, arrow='', use_instan
     'A -> B: f(x)'
 
     '''
-    return "%(class1)s->%(arrow)s %(class2)s: %(method)s%(args)s" % {
-        'class1': class_name(class1, use_instance_ids),
-        'class2': class_name(class2, use_instance_ids),
+    class_name_1 = class_name(class1, use_instance_ids)
+    class_name_2 = class_name(class2, use_instance_ids)
+    return "%(class1)s->%(arrow)s %(class2)s: %(method)s%(args)s%(box1)s%(box2)s" % {
+        'class1': class_name_1.split('@')[-1],
+        'class2': class_name_2.split('@')[-1],
         'method': method_name(the_method),
-        'args': format_args(args, kwargs),
-        'arrow': arrow
+        'args': format_args(args, kwargs) if show_arguments else '',
+        'arrow': arrow,
+        'box1': class_box(class_name_1),
+        'box2': class_box(class_name_2)
     }
 
 

@@ -2,6 +2,8 @@ import autouml
 import autouml.log
 import random
 
+autouml.set_options(show_arguments=True, use_instance_ids=True)
+
 
 @autouml.sequence_dia
 class Dice():
