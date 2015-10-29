@@ -1,4 +1,9 @@
-from version import __version__
-import decorators
+'''
+autouml provides decorators to trace method
+calls in your code during execution time.
+'''
 
-sequence_dia = decorators.autodecorate
+from autouml.version import __version__
+import autouml.decorators
+
+sequence_dia = autouml.decorators.get_decorator()

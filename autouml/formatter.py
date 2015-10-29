@@ -26,7 +26,27 @@ def format_args(args, kwargs):
     return formattedArgs
 
 
-def generic_arrow(class1, class2, method, args, kwargs, arrow=''):
+def class_name(the_class, use_id=False):
+    '''
+    Returns class name and, optionally, instance id
+    '''
+    if the_class is not None:
+        if use_id:
+            return ' %s@%s' % (
+                str(the_class.__class__.__name__).replace('__main__.', ''),
+                id(the_class)
+            )
+        else:
+            return ' %s' % str(the_class.__class__.__name__).replace('__main__.', '')
+    else:
+        return '['
+
+
+def method_name(the_method):
+    return the_method.__name__
+
+
+def generic_arrow(class1, class2, the_method, args, kwargs, arrow='', use_instance_ids=False):
     '''
     Returns a sequence string
 
@@ -34,18 +54,16 @@ def generic_arrow(class1, class2, method, args, kwargs, arrow=''):
     'A -> B: f(x)'
 
     '''
-    if class1 != '[':
-        class1 += ' '
     return "%(class1)s->%(arrow)s %(class2)s: %(method)s%(args)s" % {
-        'class1': class1,
-        'class2': class2,
-        'method': method,
+        'class1': class_name(class1, use_instance_ids),
+        'class2': class_name(class2, use_instance_ids),
+        'method': method_name(the_method),
         'args': format_args(args, kwargs),
         'arrow': arrow
     }
 
 
-def method_arrow(*args):
+def method_arrow(*args, **kwargs):
     '''
     Returns a sequence string arrow for methods
 
@@ -53,10 +71,11 @@ def method_arrow(*args):
     'A -> B: f(x)'
 
     '''
-    return generic_arrow(*args, arrow='')
+
+    return generic_arrow(*args, **kwargs)
 
 
-def constructor_arrow(*args):
+def constructor_arrow(*args, **kwargs):
     '''
     Returns a sequence string arrow for constructor methods
 
@@ -64,4 +83,5 @@ def constructor_arrow(*args):
     'A ->o B: __init__(x)'
 
     '''
-    return generic_arrow(*args, arrow='o')
+    kwargs['arrow'] = 'o'
+    return generic_arrow(*args, **kwargs)
