@@ -33,28 +33,15 @@ def get_decorator(
                 setattr(orig_class, name, constructor_dec(method))
         return orig_class
 
-    def function_dec(orig_func):
+    def module_dec(orig_module):
         '''
-        Simple function decorator
+        Takes a given module and returns a copy 
+        with all its public classes and methods 
+        decorated
         '''
-        def wrapper(*args, **kwargs):
-            'Wrapping function for decorator'
-            class_from = None
-            class_to = None
-            the_method = orig_func
-            LOGGER.info(
-                autouml.formatter.generic_arrow(
-                    class_from,
-                    class_to,
-                    the_method,
-                    args[1:],
-                    kwargs,
-                    show_arguments=show_arguments,
-                    use_instance_ids=use_instance_ids
-                )
-            )
-            return orig_func(*args, **kwargs)
-        return wrapper
+        for name, method in inspect.getmembers(orig_module):
+            setattr(orig_module, name, autodecorate(method))
+        return orig_module
 
     def constructor_dec(*orig_func):
         '''
@@ -77,7 +64,7 @@ def get_decorator(
                     class_from,
                     class_to,
                     the_method,
-                    args[1:],
+                    args,
                     kwargs,
                     show_arguments=show_arguments,
                     use_instance_ids=use_instance_ids
@@ -99,15 +86,17 @@ def get_decorator(
                 class_from = stack[1][0].f_locals['self']
             except:
                 class_from = None
-            class_to = args[0]
+            try:
+                class_to = args[0]
+            except:
+                class_to = None
             the_method = orig_func
-
             LOGGER.info(
                 autouml.formatter.method_arrow(
                     class_from,
                     class_to,
                     the_method,
-                    args[1:],
+                    args,
                     kwargs,
                     show_arguments=show_arguments,
                     use_instance_ids=use_instance_ids
@@ -116,10 +105,19 @@ def get_decorator(
             return orig_func(*args, **kwargs)
         return wrapper
 
+    def no_dec(orig_func):
+        '''
+        Decorates nothing
+        '''
+        return orig_func
+
     __TYPEWRAPPERS = {
         types.FunctionType: method_dec,
         types.MethodType: method_dec,
-        'generic': class_dec
+        types.BuiltinFunctionType: method_dec,
+        types.BuiltinMethodType: method_dec,
+        types.ModuleType: module_dec,
+        types.ClassType: class_dec,
     }
 
     def autodecorate(*args, **kwargs):
@@ -129,9 +127,6 @@ def get_decorator(
         and will apply the appropiate decorator.
         '''
         content_type = type(args[0])
-        if content_type in __TYPEWRAPPERS.keys():
-            return __TYPEWRAPPERS[content_type](*args, **kwargs)
-        else:
-            return __TYPEWRAPPERS['generic'](*args, **kwargs)
+        return __TYPEWRAPPERS.get(content_type, no_dec)(*args, **kwargs)
 
     return autodecorate

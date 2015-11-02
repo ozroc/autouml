@@ -1,3 +1,10 @@
+'''
+Formatters for beutifying logs
+'''
+import types
+import inspect
+
+
 __BOXES__ = {}
 
 
@@ -35,7 +42,10 @@ def format_args(args, kwargs):
 
     allargs = []
     for item in args:
-        allargs.append('%s' % str(item))
+        try:
+            allargs.append('%s' % str(item))
+        except:
+            allargs.append(item.__class__)
 
     for key, item in kwargs.items():
         allargs.append('%s=%s' % (key, str(item)))
@@ -51,7 +61,7 @@ def class_name(the_class, use_id=False):
     '''
     Returns class name and, optionally, instance id
     '''
-    if the_class is not None:
+    if type(the_class) == types.InstanceType:
         if use_id:
             return ' %s@%s' % (
                 str(the_class.__class__.__name__).replace('__main__.', ''),
@@ -60,7 +70,7 @@ def class_name(the_class, use_id=False):
         else:
             return ' %s' % str(the_class.__class__.__name__).replace('__main__.', '')
     else:
-        return '['
+        return None
 
 
 def method_name(the_method):
@@ -77,7 +87,15 @@ def generic_arrow(class1, class2, the_method, args, kwargs, arrow='', use_instan
     '''
     class_name_1 = class_name(class1, use_instance_ids)
     class_name_2 = class_name(class2, use_instance_ids)
-    return "%(class1)s->%(arrow)s %(class2)s: %(method)s%(args)s%(box1)s%(box2)s" % {
+    if class_name_1 is None:
+        class_name_1 = '__main__'
+    if class_name_2 is None:
+        class_name_2 = '__main__'
+    if len(args) > 0:
+        if id(class2) == id(args[0]):
+            args = list(args)
+            args[0] = 'self'
+    return "%(class1)s->%(arrow)s%(class2)s: %(method)s%(args)s%(box1)s%(box2)s" % {
         'class1': class_name_1.split('@')[-1],
         'class2': class_name_2.split('@')[-1],
         'method': method_name(the_method),
@@ -108,5 +126,5 @@ def constructor_arrow(*args, **kwargs):
     'A ->o B: __init__(x)'
 
     '''
-    kwargs['arrow'] = 'o'
+    kwargs['arrow'] = 'o '
     return generic_arrow(*args, **kwargs)

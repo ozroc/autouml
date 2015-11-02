@@ -4,12 +4,19 @@ import random
 
 autouml.set_options(show_arguments=True, use_instance_ids=True)
 
+# We also want to decorate all methods in random module
+autouml.sequence_dia(random)
+
 
 @autouml.sequence_dia
 class Dice():
     '''
     Just a random point in segment [0,radius]
     '''
+    radius = None
+
+    def __str__(self):
+        return 'Dice(%s)' % self.radius
 
     def __init__(self, radius=1):
         self.radius = radius
@@ -26,12 +33,16 @@ class Circle():
     '''
     A circle centered in (0,0) with radius r
     '''
+    radius = None
 
     def __init__(self, radius=1):
         self.radius = radius
         self.__inside = 0.
         self.__total = 0.
         self.dice = Dice(self.radius)
+
+    def __str__(self):
+        return 'Circle(%s)' % self.radius
 
     def is_inside(self, point):
         return point.x**2 + point.y**2 < self.radius**2
@@ -52,13 +63,15 @@ class Circle():
 
 @autouml.sequence_dia
 class Point():
+    x = None
+    y = None
 
     def __init__(self, x, y):
         self.x = x
         self.y = y
 
     def __str__(self):
-        return '(%s, %s)' % (self.x, self.y)
+        return 'Point(%s, %s)' % (self.x, self.y)
 
 c = Circle(1)
 c.rshot(3)
