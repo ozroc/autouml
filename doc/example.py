@@ -1,15 +1,15 @@
 import autouml
 import autouml.log
-import random
+import numpy
 
 autouml.set_options(show_arguments=True, use_instance_ids=True)
 
-# We also want to decorate all methods in random module
-autouml.sequence_dia(random)
+# We also want to decorate all methods in numpy module
+autouml.sequence_dia(numpy.random)
 
 
 @autouml.sequence_dia
-class Dice():
+class Dice(object):
     '''
     Just a random point in segment [0,radius]
     '''
@@ -22,14 +22,14 @@ class Dice():
         self.radius = radius
 
     def roll(self):
-        return random.random() * self.radius
+        return numpy.random.random() * self.radius
 
     def rpoint(self):
         return Point(self.roll(), self.roll())
 
 
 @autouml.sequence_dia
-class Circle():
+class Circle(object):
     '''
     A circle centered in (0,0) with radius r
     '''
@@ -62,7 +62,7 @@ class Circle():
 
 
 @autouml.sequence_dia
-class Point():
+class Point(object):
     x = None
     y = None
 

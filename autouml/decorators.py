@@ -6,6 +6,7 @@ import types
 import logging
 import inspect
 import autouml.formatter
+import copy
 
 
 def get_decorator(
@@ -40,7 +41,7 @@ def get_decorator(
         decorated
         '''
         for name, method in inspect.getmembers(orig_module):
-            setattr(orig_module, name, autodecorate(method))
+            setattr(orig_module, name, autodecorate(method, nomodule=True))
         return orig_module
 
     def constructor_dec(*orig_func):
@@ -111,22 +112,27 @@ def get_decorator(
         '''
         return orig_func
 
-    __TYPEWRAPPERS = {
+    __TYPEWRAPPERS_NOMODULE = {
         types.FunctionType: method_dec,
         types.MethodType: method_dec,
         types.BuiltinFunctionType: method_dec,
         types.BuiltinMethodType: method_dec,
-        types.ModuleType: module_dec,
         types.ClassType: class_dec,
     }
 
-    def autodecorate(*args, **kwargs):
+    __TYPEWRAPPERS = copy.copy(__TYPEWRAPPERS_NOMODULE)
+    __TYPEWRAPPERS[types.ModuleType] = module_dec
+
+    def autodecorate(content, nomodule=False):
         '''
         This is an automatic decorator.
         It will analyse the type of the object to decorate
         and will apply the appropiate decorator.
         '''
-        content_type = type(args[0])
-        return __TYPEWRAPPERS.get(content_type, no_dec)(*args, **kwargs)
+        content_type = type(content)
+        if nomodule:
+            return __TYPEWRAPPERS_NOMODULE.get(content_type, no_dec)(content)
+        else:
+            return __TYPEWRAPPERS.get(content_type, no_dec)(content)
 
     return autodecorate
